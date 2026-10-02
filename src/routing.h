@@ -3,7 +3,7 @@
 
 #include "graph.h"
 #include <vector>
-#include <utility>
+#include "simulate.h"
 using namespace std;
 
 struct PathResults{
@@ -14,6 +14,6 @@ struct PathResults{
 
 PathResults bfs(const Graph& g, int startId, int endId);
 PathResults dijkstra(const Graph&g, int startId, int endId);
-void profileNetwork(const Graph&g, vector<pair<int,int>> passengerTrips);
+void profileNetwork(const Graph&g, vector<Passenger> passengers);
 
 #endif

@@ -1,4 +1,5 @@
 #include "routing.h"
+#include "simulate.h"
 #include <queue>
 #include <map>
 #include <iostream>
@@ -111,14 +112,14 @@ PathResults dijkstra(const Graph&g, int startId, int endId){
     return PathResults{path, dist[endId], true};
 }
 
-void profileNetwork(const Graph&g, vector<pair<int,int>>passengerTrips){
+void profileNetwork(const Graph&g, vector<Passenger> passengers){
     int totalTime = 0;
     int tripsFound = 0;
     int tripsNotFound = 0;
     map<int,int> stopUsage;
 
-    for( const auto& trip : passengerTrips){
-        PathResults result = dijkstra(g, trip.first, trip.second);
+    for( const auto& passenger : passengers){
+        PathResults result = dijkstra(g, passenger.origin, passenger.destination);
 
         if(!result.found){
             tripsNotFound++;
@@ -143,7 +144,7 @@ void profileNetwork(const Graph&g, vector<pair<int,int>>passengerTrips){
     }
 
     cout << "======Statistics======"<<endl;
-    cout << "Total Passengers: " << passengerTrips.size() << endl;
+    cout << "Total Passengers: " << passengers.size() << endl;
     cout << "Trips Found: " << tripsFound << endl;
     cout << "Trips Not Found: " << tripsNotFound << endl;
 
