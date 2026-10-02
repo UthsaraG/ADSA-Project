@@ -34,6 +34,13 @@ compile the group source files. The Microsoft C/C++ extension is recommended for
 editing and F5 debugging; it is not required to build or run. F5 also requires
 LLDB on macOS or GDB on Windows/Linux, available to the extension.
 
+If you use the installed **Code Runner** extension's **Run Code** button on
+macOS, the workspace settings also build the complete project and launch the
+interactive menu in the terminal. Open the repository folder, then run any
+project `.cpp` file. Compiling `bus_network.cpp` alone cannot produce an
+executable: it needs the graph implementation and `main.cpp`. The build/run
+tasks above remain available on all supported platforms.
+
 ## Build and run from the VS Code terminal
 
 macOS:
