@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Part I (C++)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/transport",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "preLaunchTask": "Build transport",
+      "osx": {
+        "MIMode": "lldb"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/transport.exe"
+      }
+    }
+  ]
+}

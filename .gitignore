@@ -35,6 +35,10 @@
 *.lib
 
 # Executables
+/transport
+/bus_tests
+*.dSYM/
+.DS_Store
 *.exe
 *.out
 *.app

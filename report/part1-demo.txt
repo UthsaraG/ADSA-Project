@@ -1,0 +1,89 @@
+SMART CITY TRANSPORT - PART I: BUS ROUTES AND BUS NETWORK
+C++17 | 20 city locations | blue links from the reference map
+Assumed service: 06:00-22:00, every 15 min, both directions, zero dwell time.
+
+BUS NETWORK: 20 city stops, 23 undirected bus links
+1 Airport -> 2 Residential Zone A (10 min); 5 Transport Hub A (5 min); 6 Public Park A (5 min); 3 Tech Park (10 min); 7 Economic Zone (15 min)
+2 Residential Zone A -> 1 Airport (10 min); 5 Transport Hub A (5 min)
+3 Tech Park -> 1 Airport (10 min)
+4 Industrial Zone A -> no bus connection
+5 Transport Hub A -> 2 Residential Zone A (5 min); 1 Airport (5 min); 6 Public Park A (5 min); 9 City Hall (5 min)
+6 Public Park A -> 1 Airport (5 min); 5 Transport Hub A (5 min); 10 Multimodal Transport Center (5 min)
+7 Economic Zone -> 1 Airport (15 min)
+8 University -> 9 City Hall (5 min); 13 Hospital (5 min)
+9 City Hall -> 5 Transport Hub A (5 min); 8 University (5 min); 10 Multimodal Transport Center (5 min)
+10 Multimodal Transport Center -> 6 Public Park A (5 min); 9 City Hall (5 min); 11 City Area (5 min)
+11 City Area -> 10 Multimodal Transport Center (5 min); 12 Lake (10 min)
+12 Lake -> 11 City Area (10 min)
+13 Hospital -> 8 University (5 min); 14 Residential Zone B (5 min); 18 Residential Zone C (5 min)
+14 Residential Zone B -> 13 Hospital (5 min); 15 Public Park B (5 min); 17 Transport Hub B (10 min)
+15 Public Park B -> 14 Residential Zone B (5 min); 16 Mall (5 min)
+16 Mall -> 15 Public Park B (5 min); 20 Port (5 min); 17 Transport Hub B (10 min); 19 Industrial Zone B (10 min)
+17 Transport Hub B -> 18 Residential Zone C (10 min); 14 Residential Zone B (10 min); 16 Mall (10 min)
+18 Residential Zone C -> 13 Hospital (5 min); 17 Transport Hub B (10 min)
+19 Industrial Zone B -> 16 Mall (10 min)
+20 Port -> 16 Mall (5 min)
+Bus connected components: 2 (sizes 19 1).
+Airport--Economic Zone: 15 min, agreed assumption (unlabelled in map).
+
+BUS SERVICE LINES (assumed; operate in both directions)
+B1 - Northern connector - 20 min
+  2 Residential Zone A -> 1 Airport -> 3 Tech Park
+  Depart each terminus 06:00-22:00 every 15 min.
+B2 - Airport and economy - 25 min
+  2 Residential Zone A -> 5 Transport Hub A -> 1 Airport -> 7 Economic Zone
+  Depart each terminus 06:00-22:00 every 15 min.
+B3 - Airport to lake - 25 min
+  1 Airport -> 6 Public Park A -> 10 Multimodal Transport Center -> 11 City Area -> 12 Lake
+  Depart each terminus 06:00-22:00 every 15 min.
+B4 - Western connector - 35 min
+  6 Public Park A -> 5 Transport Hub A -> 9 City Hall -> 8 University -> 13 Hospital -> 18 Residential Zone C -> 17 Transport Hub B
+  Depart each terminus 06:00-22:00 every 15 min.
+B5 - University shuttle - 10 min
+  8 University -> 9 City Hall -> 10 Multimodal Transport Center
+  Depart each terminus 06:00-22:00 every 15 min.
+B6 - Hospital to port - 20 min
+  13 Hospital -> 14 Residential Zone B -> 15 Public Park B -> 16 Mall -> 20 Port
+  Depart each terminus 06:00-22:00 every 15 min.
+B7 - Southern connector - 30 min
+  14 Residential Zone B -> 17 Transport Hub B -> 16 Mall -> 19 Industrial Zone B
+  Depart each terminus 06:00-22:00 every 15 min.
+
+TIMETABLE B3 forward | terminus departure 07:00
+  07:00 Airport
+  07:05 Public Park A
+  07:10 Multimodal Transport Center
+  07:15 City Area
+  07:25 Lake
+
+BUS TRIP B3 forward | requested 07:02
+Wait 3 min; board 07:05; arrive 07:25; ride 20 min; total 23 min.
+  07:05 Public Park A -> 07:10 Multimodal Transport Center (5 min)
+  07:10 Multimodal Transport Center -> 07:15 City Area (5 min)
+  07:15 City Area -> 07:25 Lake (10 min)
+
+BUS TRIP B6 reverse | requested 07:01
+Wait 14 min; board 07:15; arrive 07:35; ride 20 min; total 34 min.
+  07:15 Port -> 07:20 Mall (5 min)
+  07:20 Mall -> 07:25 Public Park B (5 min)
+  07:25 Public Park B -> 07:30 Residential Zone B (5 min)
+  07:30 Residential Zone B -> 07:35 Hospital (5 min)
+
+No remaining B3 bus in this direction at the boarding stop today.
+
+BUS SNAPSHOT 06:07: 14 active services
+  B1-F-360 forward | Residential Zone A -> Airport | 7/10 min completed
+  B1-R-360 reverse | Tech Park -> Airport | 7/10 min completed
+  B2-F-360 forward | Transport Hub A -> Airport | 2/5 min completed
+  B2-R-360 reverse | Economic Zone -> Airport | 7/15 min completed
+  B3-F-360 forward | Public Park A -> Multimodal Transport Center | 2/5 min completed
+  B3-R-360 reverse | Lake -> City Area | 7/10 min completed
+  B4-F-360 forward | Transport Hub A -> City Hall | 2/5 min completed
+  B4-R-360 reverse | Transport Hub B -> Residential Zone C | 7/10 min completed
+  B5-F-360 forward | City Hall -> Multimodal Transport Center | 2/5 min completed
+  B5-R-360 reverse | City Hall -> University | 2/5 min completed
+  B6-F-360 forward | Residential Zone B -> Public Park B | 2/5 min completed
+  B6-R-360 reverse | Mall -> Public Park B | 2/5 min completed
+  B7-F-360 forward | Residential Zone B -> Transport Hub B | 7/10 min completed
+  B7-R-360 reverse | Industrial Zone B -> Mall | 7/10 min completed
+Each ID represents one scheduled trip; fleet reuse/capacity are not modelled in Part I.
