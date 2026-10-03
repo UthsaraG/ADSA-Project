@@ -6,8 +6,6 @@
 std::vector<Passenger> generatePassengers(int hour) {
   std::vector<Passenger> hourly_passengers;
 
-  Graph g = loadGraph("data/city.json");
-
   std::mt19937 rng(std::time(nullptr) + hour);
 
   int num_passengers = 0;
