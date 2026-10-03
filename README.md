@@ -15,9 +15,11 @@ are available through the menu and command line.
 | 3 | Variable passenger demand (Part III) |
 | 4 | Shortest paths and efficiency profiling (Part IV) |
 
-The train, demand and routing source files remain placeholders for their owners.
+The train module (Part II) is integrated. The demand and routing source files
+remain placeholders on this branch for their owners.
 Part I plans a direct trip on a **chosen bus line**. Automatic shortest paths,
-bus changes, train operation and passenger demand belong to the remaining parts.
+bus changes and passenger demand belong to the remaining parts.
+Part II similarly plans a direct trip on a chosen train line.
 
 ## Run in Visual Studio Code
 
@@ -27,7 +29,8 @@ bus changes, train operation and passenger demand belong to the remaining parts.
 3. Press **Ctrl+Shift+B** (**Cmd+Shift+B** on macOS) to build.
 4. Select **Terminal > Run Task > Run transport** to use the interactive menu.
 5. Select **Run Part I demo** for a reproducible demonstration, or **Run bus tests**
-   for the automated checks.
+   for the automated checks. Select **Run train tests** or **Run Part II demo**
+   for the train module.
 
 The checked-in tasks use Clang on macOS and `g++` elsewhere. All use C++17 and
 compile the group source files. The Microsoft C/C++ extension is recommended for
@@ -135,14 +138,14 @@ rebuild and regenerate the snapshot:
 ./transport --export-city data/city.json
 ```
 
-The JSON includes stops, bus edges, proposed lines and assumptions. Train data
-can be added by Member 2 during integration. The shared `Graph` already permits
+The JSON includes stops, bus edges, proposed lines and assumptions. This command continues to export the bus snapshot; it does not export train data.
+The combined runtime graph is available through `TrainNetwork::graph()`. The shared `Graph` already permits
 separate `TransportMode::Bus` and `TransportMode::Train` edges with the same endpoints.
 
 ```cpp
 const BusNetwork bus = BusNetwork::referenceCity();
-Graph city = bus.graph(); // Copy the bus graph for multimodal integration.
-// Member 2 may add validated train edges to city with TransportMode::Train.
+const TrainNetwork train = TrainNetwork::referenceCity(bus.graph());
+const Graph& city = train.graph(); // 20 stops, 23 bus links, 13 train links
 const auto trip = bus.planTrip("B3", 6, 12, parseTime("07:02"));
 const auto positions = bus.vehiclesAt(parseTime("06:07"));
 ```
@@ -166,4 +169,66 @@ The tests cover topology, route coverage, both directions, intermediate boarding
 exact/missed departures, before/after service, moving buses, invalid input and
 mixed-mode graph edges. See `report/part1.md` for the Part I report contribution
 and `report/part1-demo.txt` for reproducible output. The group leader still needs
-to integrate Parts II-IV and prepare the final group report/submission.
+to integrate Parts III-IV and prepare the final group report/submission.
+
+## Part II: train usage and integration
+
+The interactive menu now includes train links, lines, timetables, direct trips,
+snapshots and a Part II demonstration. Existing bus commands retain their behavior.
+
+```sh
+./transport --city
+./transport --train-network
+./transport --train-lines
+./transport --train-timetable T1 F 07:00
+./transport --train-trip T1 5 17 07:02
+./transport --train-snapshot 05:37
+./transport --train-demo
+```
+
+The combined graph has 20 stops, 23 bus links and 13 train links. The T1 trip
+above boards at 07:05 and arrives at 07:40: 3 minutes waiting and 35 riding.
+T1-T5 are proposed lines with departures from both termini every 10 minutes
+from 05:30 through 23:30 inclusive, with zero dwell time. These assumptions
+remain subject to group agreement. The final train can arrive after midnight;
+requests and snapshots are restricted to the current day.
+
+| Line | Forward stop IDs (reverse also operates) | One-way minutes |
+| --- | --- | --- |
+| T1 | 4 - 5 - 10 - 15 - 17 - 19 | 60 |
+| T2 | 6 - 3 - 7 - 11 | 40 |
+| T3 | 3 - 10 | 20 |
+| T4 | 7 - 12 - 20 - 19 | 20 |
+| T5 | 12 - 19 | 7 |
+
+Run **Terminal > Run Task > Run train tests**, or:
+
+```sh
+g++ -std=c++17 -Wall -Wextra -Wpedantic src/graph.cpp src/bus_network.cpp src/train_network.cpp tests/train_network_tests.cpp -o train_tests
+./train_tests
+```
+
+On Windows use `.\train_tests.exe` and `.\transport.exe`; on macOS `clang++`
+may be used instead of `g++`. See [Part II report](report/part2.md) and its
+[demonstration output](report/part2-demo.txt).
+
+### Decisions for Members 3 and 4
+
+1. Confirm the T1-T5 line grouping and the 05:30-23:30, 10-minute service.
+2. Confirm whether mode changes are restricted to marked transfer stops 5, 10,
+   and 17, or allowed at all stops served by both modes. The current direct-trip
+   commands do not implement mode changes.
+3. Industrial Zone A (4) is train-only; journeys to or from it require a train.
+
+After these changes are merged into `main`, Members 3 and 4 should update their
+branches without discarding their work:
+
+```sh
+git fetch origin
+git merge origin/main
+```
+
+Member 3 can use `planTrip` and `vehiclesAt` on either network. Member 4 should
+use the combined `train.graph()` for multimodal routing and respect the agreed
+transfer policy. Include `train_network.h` alongside `bus_network.h` when using
+these APIs.
