@@ -118,6 +118,73 @@
         "panel": "dedicated",
         "clear": true
       }
+    },
+    {
+      "label": "Build train tests",
+      "type": "process",
+      "command": "g++",
+      "osx": {
+        "command": "clang++"
+      },
+      "args": [
+        "-std=c++17",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-g",
+        "src/graph.cpp",
+        "src/bus_network.cpp",
+        "src/train_network.cpp",
+        "tests/train_network_tests.cpp",
+        "-o",
+        "train_tests"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Run train tests",
+      "type": "process",
+      "command": "${workspaceFolder}/train_tests",
+      "windows": {
+        "command": "${workspaceFolder}/train_tests.exe"
+      },
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Build train tests",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Run Part II demo",
+      "type": "process",
+      "command": "${workspaceFolder}/transport",
+      "windows": {
+        "command": "${workspaceFolder}/transport.exe"
+      },
+      "args": [
+        "--train-demo"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "Build transport",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
     }
   ]
 }

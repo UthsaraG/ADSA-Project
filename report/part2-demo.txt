@@ -1,0 +1,80 @@
+SMART CITY TRANSPORT - PART II: TRAIN ROUTES AND TRAIN NETWORK
+C++17 | 20 city locations | red dashed links from the reference map
+Assumed service: 05:30-23:30, every 10 min, both directions, zero dwell time.
+
+TRAIN NETWORK: 13 undirected train links
+3 Tech Park -> 6 Public Park A (20 min); 7 Economic Zone (10 min); 10 Multimodal Transport Center (20 min)
+4 Industrial Zone A -> 5 Transport Hub A (5 min)
+5 Transport Hub A -> 4 Industrial Zone A (5 min); 10 Multimodal Transport Center (10 min)
+6 Public Park A -> 3 Tech Park (20 min)
+7 Economic Zone -> 3 Tech Park (10 min); 11 City Area (10 min); 12 Lake (5 min)
+10 Multimodal Transport Center -> 5 Transport Hub A (10 min); 15 Public Park B (5 min); 3 Tech Park (20 min)
+11 City Area -> 7 Economic Zone (10 min)
+12 Lake -> 7 Economic Zone (5 min); 20 Port (5 min); 19 Industrial Zone B (7 min)
+15 Public Park B -> 10 Multimodal Transport Center (5 min); 17 Transport Hub B (20 min)
+17 Transport Hub B -> 15 Public Park B (20 min); 19 Industrial Zone B (20 min)
+19 Industrial Zone B -> 17 Transport Hub B (20 min); 20 Port (10 min); 12 Lake (7 min)
+20 Port -> 12 Lake (5 min); 19 Industrial Zone B (10 min)
+12 of 20 stops are served by train.
+Train components with at least one link: 1.
+Train-only stop: Industrial Zone A (4) has no bus link; it is reached only by train.
+
+TRAIN LINES (assumed; operate in both directions)
+T1 - West-South spine - 60 min
+  4 Industrial Zone A -> 5 Transport Hub A -> 10 Multimodal Transport Center -> 15 Public Park B -> 17 Transport Hub B -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 10 min.
+T2 - North-East connector - 40 min
+  6 Public Park A -> 3 Tech Park -> 7 Economic Zone -> 11 City Area
+  Depart each terminus 05:30-23:30 every 10 min.
+T3 - Tech Park express - 20 min
+  3 Tech Park -> 10 Multimodal Transport Center
+  Depart each terminus 05:30-23:30 every 10 min.
+T4 - East coast - 20 min
+  7 Economic Zone -> 12 Lake -> 20 Port -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 10 min.
+T5 - Lake-Industrial B shuttle - 7 min
+  12 Lake -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 10 min.
+
+TIMETABLE T1 forward | terminus departure 07:00
+  07:00 Industrial Zone A
+  07:05 Transport Hub A
+  07:15 Multimodal Transport Center
+  07:20 Public Park B
+  07:40 Transport Hub B
+  08:00 Industrial Zone B
+
+TRAIN TRIP T1 forward | requested 07:02
+Wait 3 min; board 07:05; arrive 07:40; ride 35 min; total 38 min.
+  07:05 Transport Hub A -> 07:15 Multimodal Transport Center (10 min)
+  07:15 Multimodal Transport Center -> 07:20 Public Park B (5 min)
+  07:20 Public Park B -> 07:40 Transport Hub B (20 min)
+
+TRAIN TRIP T1 forward | requested 07:06
+Wait 9 min; board 07:15; arrive 07:50; ride 35 min; total 44 min.
+  07:15 Transport Hub A -> 07:25 Multimodal Transport Center (10 min)
+  07:25 Multimodal Transport Center -> 07:30 Public Park B (5 min)
+  07:30 Public Park B -> 07:50 Transport Hub B (20 min)
+
+TRAIN TRIP T4 reverse | requested 07:01
+Wait 9 min; board 07:10; arrive 07:30; ride 20 min; total 29 min.
+  07:10 Industrial Zone B -> 07:20 Port (10 min)
+  07:20 Port -> 07:25 Lake (5 min)
+  07:25 Lake -> 07:30 Economic Zone (5 min)
+
+TRAIN TRIP T5 forward | requested 23:30
+Wait 0 min; board 23:30; arrive 23:37; ride 7 min; total 7 min.
+  23:30 Lake -> 23:37 Industrial Zone B (7 min)
+
+No remaining T5 train in this direction at the boarding stop today.
+
+TRAIN SNAPSHOT 05:37: 8 active services
+  T1-F-330 forward | Transport Hub A -> Multimodal Transport Center | 2/10 min completed
+  T1-R-330 reverse | Industrial Zone B -> Transport Hub B | 7/20 min completed
+  T2-F-330 forward | Public Park A -> Tech Park | 7/20 min completed
+  T2-R-330 reverse | City Area -> Economic Zone | 7/10 min completed
+  T3-F-330 forward | Tech Park -> Multimodal Transport Center | 7/20 min completed
+  T3-R-330 reverse | Multimodal Transport Center -> Tech Park | 7/20 min completed
+  T4-F-330 forward | Lake -> Port | 2/5 min completed
+  T4-R-330 reverse | Industrial Zone B -> Port | 7/10 min completed
+Each ID represents one scheduled trip; fleet reuse/capacity are not modelled.
