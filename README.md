@@ -218,8 +218,8 @@ may be used instead of `g++`. See [Part II report](report/part2.md) and its
    Departures include 05:30, 05:50 and 06:10; 07:10 is valid and 07:00 is not.
 2. Mode changes are restricted to Transport Hub A (5), Multimodal Transport
    Center (10), and Transport Hub B (17). Other stops shared by both modes do
-   not permit bus/train transfers. Direct-trip commands stay on one line; the
-   integrated scheduled journey planner checks this rule at every mode change.
+   not permit bus/train transfers. The current direct-trip commands stay on
+   one line; Members 3 and 4 can use the shared transfer checks when joining trips.
 3. Industrial Zone A (4) is train-only; journeys to or from it require a train.
 
 After these changes are merged into `main`, Members 3 and 4 should update their
@@ -236,46 +236,3 @@ transfer policy using `Graph::canTransfer(id, fromMode, toMode)`.
 `Graph::transferStops()` returns the designated stops that have both bus and
 train edges, and `--transfers` (menu option 15) lists their serving lines. Include `train_network.h` alongside `bus_network.h` when using
 these APIs.
-
-## Complete group application (Parts I-IV)
-
-The latest contributions from `member3-simulation` and
-`member4-routing-profiling` are merged into the bus/train application. Member 3's
-peak demand model generates 80-150 passengers per hour at 07:00-09:59 and
-17:00-19:59, and 10-40 in other hours. An optional seed makes the runs reproducible.
-Member 4's BFS and Dijkstra algorithms now track transport mode, so they cannot
-switch from bus to train at an unmarked shared stop.
-
-```sh
-./transport --journey 4 13 07:00
-./transport --route 4 13
-./transport --demand 7 2202
-./transport --demand 12 2202
-./transport --full-demo
-```
-
-The journey from Industrial Zone A (4) to Hospital (13), ready at 07:00, boards
-T1 at 07:10, reaches Transport Hub A (5) at 07:15, then boards B4 at 07:20 and
-arrives at 07:35. It includes 15 minutes waiting and 20 minutes riding. The mode
-change occurs at a designated transfer stop. All T1-T5 service intervals are
-20 minutes; bus intervals remain 15 minutes.
-
-Menu options **16-19** expose passenger demand/profiling, BFS/Dijkstra comparisons,
-scheduled journeys and the full demonstration. In VS Code, select **Run full
-group demo** or **Run integration tests** from Terminal > Run Task.
-
-BFS minimizes graph links and Dijkstra minimizes graph riding time. Their
-`--route` output excludes waits and labels that fact. The scheduled planner
-instead minimizes actual arrival time using each line's timetable. Demand
-profiling calls that planner for each passenger and reports completed/unavailable
-journeys, mean total/waiting/riding times, mode changes and the busiest stop.
-Same-mode line changes are permitted at shared stops; bus/train changes are
-restricted to 5, 10 and 17. There is zero dwell/walking time. Requests belong to
-one day; last trains may finish after midnight, but next-day departures are not
-planned. Passenger demand does not alter service capacity or travel times.
-
-The integration suite checks all 400 morning origin/destination pairs, every
-itinerary's continuity and service times, forbidden transfers, parallel-mode
-edges, invalid stops, service boundaries, peak/off-peak demand and reproducibility.
-See [integration notes](report/integration.md) and
-[full demonstration output](report/full-group-demo.txt).

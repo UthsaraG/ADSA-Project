@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+// Mirrors the bus module so Members 3 and 4 can treat both modes the same way.
 // Times are integer minutes after midnight.
 struct TrainLine {
     std::string id;
