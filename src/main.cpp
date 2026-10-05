@@ -1,5 +1,8 @@
 #include "bus_network.h"
 #include "train_network.h"
+#include "routing.h"
+#include "simulate.h"
+
 
 #include <fstream>
 #include <iostream>
@@ -107,7 +110,7 @@ void interactive(const BusNetwork& network, const TrainNetwork& train) {
                  "Use stop IDs 1-20 and route IDs B1-B7 and train IDs T1-T5; times use HH:MM.\n";
     while (true) {
         std::cout << "\n1. City stops\n2. Bus graph\n3. Bus service lines\n4. Timetable\n"
-                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n0. Exit\nChoice: ";
+                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n15. Run Network Profiling\n0. Exit\nChoice: ";
         std::string choice;
         if (!std::getline(std::cin, choice) || choice == "0") return;
         try {
@@ -147,7 +150,13 @@ void interactive(const BusNetwork& network, const TrainNetwork& train) {
                 train.printTrip(train.planTrip(line, from, to, requested), std::cout);
             } else if (choice == "13") train.printSnapshot(parseTime(ask("Snapshot HH:MM: ")), std::cout);
             else if (choice == "14") trainDemo(train);
-            else std::cout << "Choose 0 to 14.\n";
+                        else if (choice == "15") {
+                const int hour = integer(ask("Enter hour of day (0-23) to profile: "));
+                std::vector<Passenger> passengers = generatePassengers(hour);
+                profileNetwork(train.graph(), passengers);
+            }
+
+            else std::cout << "Choose 0 to 15.\n";
         } catch (const std::exception& error) {
             if (std::cin.eof()) return;
             std::cout << "Input error: " << error.what() << '\n';
