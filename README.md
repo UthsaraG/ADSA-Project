@@ -178,7 +178,6 @@ snapshots and a Part II demonstration. Existing bus commands retain their behavi
 
 ```sh
 ./transport --city
-./transport --transfers
 ./transport --train-network
 ./transport --train-lines
 ./transport --train-timetable T1 F 07:10
@@ -234,5 +233,5 @@ Member 3 can use `planTrip` and `vehiclesAt` on either network. Member 4 should
 use the combined `train.graph()` for multimodal routing and respect the agreed
 transfer policy using `Graph::canTransfer(id, fromMode, toMode)`.
 `Graph::transferStops()` returns the designated stops that have both bus and
-train edges, and `--transfers` (menu option 15) lists their serving lines. Include `train_network.h` alongside `bus_network.h` when using
+train edges. Include `train_network.h` alongside `bus_network.h` when using
 these APIs.
