@@ -8,7 +8,7 @@
 #include <utility>
 
 namespace {
-// Assumed train service (agree with the group): 05:30-23:30, every 10 minutes.
+
 constexpr int firstTrain = 5 * 60 + 30;
 constexpr int lastTrain = 23 * 60 + 30;
 constexpr int headway = 10;
@@ -47,7 +47,7 @@ TrainNetwork::TrainNetwork(Graph graph, std::vector<TrainLine> lines)
 TrainNetwork TrainNetwork::referenceCity(const Graph& cityStops) {
     Graph graph = cityStops;
     addTrainEdges(graph);
-    // Proposed lines (not given in the brief); together they cover all 13 links.
+    
     std::vector<TrainLine> lines = {
         {"T1", "West-South spine", {4, 5, 10, 15, 17, 19}, firstTrain, lastTrain, headway},
         {"T2", "North-East connector", {6, 3, 7, 11}, firstTrain, lastTrain, headway},
