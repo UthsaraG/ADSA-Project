@@ -1,5 +1,7 @@
 #include "bus_network.h"
 #include "train_network.h"
+#include "routing.h"
+#include "simulate.h"
 
 #include <algorithm>
 #include <fstream>
@@ -102,6 +104,44 @@ void showTransfers(const BusNetwork& bus, const TrainNetwork& train) {
     }
 }
 
+void comparePaths(const Graph& city, int from, int to) {
+    for (bool weighted : {false, true}) {
+        const auto path = weighted ? dijkstra(city, from, to) : bfs(city, from, to);
+        std::cout << (weighted ? "DIJKSTRA (least riding time)" : "BFS (fewest links)") << '\n';
+        if (!path.found) { std::cout << "  No permitted path.\n"; continue; }
+        std::cout << "  Riding time: " << path.totalMinutes << " min (timetable waits excluded)\n  "
+                  << city.stop(path.stopIds.front()).name;
+        for (std::size_t i = 1; i < path.stopIds.size(); ++i) {
+            std::cout << " --" << modeName(path.modes[i - 1]) << "--> " << city.stop(path.stopIds[i]).name;
+        }
+        std::cout << '\n';
+    }
+}
+
+void demand(const BusNetwork& bus, const TrainNetwork& train, int hour, unsigned int seed) {
+    const auto passengers = generatePassengers(hour, seed);
+    if (!passengers.empty()) {
+        const auto& sample = passengers.front();
+        std::cout << "Sample passenger " << sample.id << " | " << train.graph().stop(sample.origin).name
+                  << " -> " << train.graph().stop(sample.destination).name << " | ready "
+                  << formatTime(sample.departureTime) << '\n';
+        printJourney(planJourney(bus, train, sample.origin, sample.destination, sample.departureTime), train.graph(), std::cout);
+    }
+    profileNetwork(bus, train, passengers);
+}
+
+void fullDemo(const BusNetwork& bus, const TrainNetwork& train) {
+    demo(bus);
+    std::cout << '\n';
+    trainDemo(train);
+    std::cout << "\nPARTS III AND IV - INTEGRATED SCHEDULED JOURNEYS AND PROFILING\n";
+    showTransfers(bus, train);
+    comparePaths(train.graph(), 4, 13);
+    printJourney(planJourney(bus, train, 4, 13, parseTime("07:00")), train.graph(), std::cout);
+    demand(bus, train, 7, 2202);
+    demand(bus, train, 12, 2202);
+}
+
 void help() {
     std::cout << "Usage: transport [command]\n"
                  "  (no command)                         Interactive menu\n"
@@ -119,16 +159,20 @@ void help() {
                  "  --train-trip LINE FROM TO HH:MM      Next direct train on a chosen line\n"
                  "  --train-snapshot HH:MM                Moving trains at one time\n"
                  "  --train-demo                         Reproducible Part II demonstration\n"
+                 "  --journey FROM TO HH:MM              Earliest bus/train scheduled arrival\n"
+                 "  --route FROM TO                      BFS/Dijkstra graph comparison\n"
+                 "  --demand HOUR [SEED]                 Hourly passengers and scheduled stats\n"
+                 "  --full-demo                          Demonstrate all four members' modules\n"
                  "  --help                               Show this help\n"
                  "Times are 24-hour HH:MM; IDs are 1-20; service lines are B1-B7 and T1-T5.\n";
 }
 
 void interactive(const BusNetwork& network, const TrainNetwork& train) {
-    std::cout << "SMART CITY TRANSPORT - PARTS I AND II (BUS AND TRAIN)\n"
+    std::cout << "SMART CITY TRANSPORT - ALL FOUR PARTS\n"
                  "Use stop IDs 1-20 and route IDs B1-B7 and train IDs T1-T5; times use HH:MM.\n";
     while (true) {
         std::cout << "\n1. City stops\n2. Bus graph\n3. Bus service lines\n4. Timetable\n"
-                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n15. Bus/train transfer stops\n0. Exit\nChoice: ";
+                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n15. Bus/train transfer stops\n16. Passenger demand and profiling\n17. BFS/Dijkstra comparison\n18. Scheduled bus/train journey\n19. Full group demonstration\n0. Exit\nChoice: ";
         std::string choice;
         if (!std::getline(std::cin, choice) || choice == "0") return;
         try {
@@ -169,7 +213,19 @@ void interactive(const BusNetwork& network, const TrainNetwork& train) {
             } else if (choice == "13") train.printSnapshot(parseTime(ask("Snapshot HH:MM: ")), std::cout);
             else if (choice == "14") trainDemo(train);
             else if (choice == "15") showTransfers(network, train);
-            else std::cout << "Choose 0 to 15.\n";
+            else if (choice == "16") {
+                const int hour = integer(ask("Demand hour (0-23): "));
+                demand(network, train, hour, 2202);
+            } else if (choice == "17" || choice == "18") {
+                const int from = integer(ask("Origin stop ID: "));
+                const int to = integer(ask("Destination stop ID: "));
+                if (choice == "17") comparePaths(train.graph(), from, to);
+                else {
+                    const int ready = parseTime(ask("Ready to travel HH:MM: "));
+                    printJourney(planJourney(network, train, from, to, ready), train.graph(), std::cout);
+                }
+            } else if (choice == "19") fullDemo(network, train);
+            else std::cout << "Choose 0 to 19.\n";
         } catch (const std::exception& error) {
             if (std::cin.eof()) return;
             std::cout << "Input error: " << error.what() << '\n';
@@ -210,6 +266,12 @@ int main(int argc, char* argv[]) {
         } else if (command == "--train-trip" && argc == 6) {
             train.printTrip(train.planTrip(argv[2], integer(argv[3]), integer(argv[4]), parseTime(argv[5])), std::cout);
         } else if (command == "--train-snapshot" && argc == 3) train.printSnapshot(parseTime(argv[2]), std::cout);
+        else if (command == "--journey" && argc == 5) {
+            printJourney(planJourney(network, train, integer(argv[2]), integer(argv[3]), parseTime(argv[4])), city, std::cout);
+        } else if (command == "--route" && argc == 4) comparePaths(city, integer(argv[2]), integer(argv[3]));
+        else if (command == "--demand" && (argc == 3 || argc == 4)) {
+            demand(network, train, integer(argv[2]), argc == 4 ? static_cast<unsigned int>(integer(argv[3])) : 2202U);
+        } else if (command == "--full-demo" && argc == 2) fullDemo(network, train);
         else if (command == "--export-city" && argc == 3) {
             std::ofstream file(argv[2]);
             if (!file) throw std::runtime_error("Cannot open the JSON output path.");

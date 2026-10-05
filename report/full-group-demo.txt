@@ -1,0 +1,191 @@
+SMART CITY TRANSPORT - PART I: BUS ROUTES AND BUS NETWORK
+C++17 | 20 city locations | blue links from the reference map
+Assumed service: 06:00-22:00, every 15 min, both directions, zero dwell time.
+
+BUS NETWORK: 20 city stops, 23 undirected bus links
+1 Airport -> 2 Residential Zone A (10 min); 5 Transport Hub A (5 min); 6 Public Park A (5 min); 3 Tech Park (10 min); 7 Economic Zone (15 min)
+2 Residential Zone A -> 1 Airport (10 min); 5 Transport Hub A (5 min)
+3 Tech Park -> 1 Airport (10 min)
+4 Industrial Zone A -> no bus connection
+5 Transport Hub A -> 2 Residential Zone A (5 min); 1 Airport (5 min); 6 Public Park A (5 min); 9 City Hall (5 min)
+6 Public Park A -> 1 Airport (5 min); 5 Transport Hub A (5 min); 10 Multimodal Transport Center (5 min)
+7 Economic Zone -> 1 Airport (15 min)
+8 University -> 9 City Hall (5 min); 13 Hospital (5 min)
+9 City Hall -> 5 Transport Hub A (5 min); 8 University (5 min); 10 Multimodal Transport Center (5 min)
+10 Multimodal Transport Center -> 6 Public Park A (5 min); 9 City Hall (5 min); 11 City Area (5 min)
+11 City Area -> 10 Multimodal Transport Center (5 min); 12 Lake (10 min)
+12 Lake -> 11 City Area (10 min)
+13 Hospital -> 8 University (5 min); 14 Residential Zone B (5 min); 18 Residential Zone C (5 min)
+14 Residential Zone B -> 13 Hospital (5 min); 15 Public Park B (5 min); 17 Transport Hub B (10 min)
+15 Public Park B -> 14 Residential Zone B (5 min); 16 Mall (5 min)
+16 Mall -> 15 Public Park B (5 min); 20 Port (5 min); 17 Transport Hub B (10 min); 19 Industrial Zone B (10 min)
+17 Transport Hub B -> 18 Residential Zone C (10 min); 14 Residential Zone B (10 min); 16 Mall (10 min)
+18 Residential Zone C -> 13 Hospital (5 min); 17 Transport Hub B (10 min)
+19 Industrial Zone B -> 16 Mall (10 min)
+20 Port -> 16 Mall (5 min)
+Bus connected components: 2 (sizes 19 1).
+Airport--Economic Zone: 15 min, agreed assumption (unlabelled in map).
+
+BUS SERVICE LINES (assumed; operate in both directions)
+B1 - Northern connector - 20 min
+  2 Residential Zone A -> 1 Airport -> 3 Tech Park
+  Depart each terminus 06:00-22:00 every 15 min.
+B2 - Airport and economy - 25 min
+  2 Residential Zone A -> 5 Transport Hub A -> 1 Airport -> 7 Economic Zone
+  Depart each terminus 06:00-22:00 every 15 min.
+B3 - Airport to lake - 25 min
+  1 Airport -> 6 Public Park A -> 10 Multimodal Transport Center -> 11 City Area -> 12 Lake
+  Depart each terminus 06:00-22:00 every 15 min.
+B4 - Western connector - 35 min
+  6 Public Park A -> 5 Transport Hub A -> 9 City Hall -> 8 University -> 13 Hospital -> 18 Residential Zone C -> 17 Transport Hub B
+  Depart each terminus 06:00-22:00 every 15 min.
+B5 - University shuttle - 10 min
+  8 University -> 9 City Hall -> 10 Multimodal Transport Center
+  Depart each terminus 06:00-22:00 every 15 min.
+B6 - Hospital to port - 20 min
+  13 Hospital -> 14 Residential Zone B -> 15 Public Park B -> 16 Mall -> 20 Port
+  Depart each terminus 06:00-22:00 every 15 min.
+B7 - Southern connector - 30 min
+  14 Residential Zone B -> 17 Transport Hub B -> 16 Mall -> 19 Industrial Zone B
+  Depart each terminus 06:00-22:00 every 15 min.
+
+TIMETABLE B3 forward | terminus departure 07:00
+  07:00 Airport
+  07:05 Public Park A
+  07:10 Multimodal Transport Center
+  07:15 City Area
+  07:25 Lake
+
+BUS TRIP B3 forward | requested 07:02
+Wait 3 min; board 07:05; arrive 07:25; ride 20 min; total 23 min.
+  07:05 Public Park A -> 07:10 Multimodal Transport Center (5 min)
+  07:10 Multimodal Transport Center -> 07:15 City Area (5 min)
+  07:15 City Area -> 07:25 Lake (10 min)
+
+BUS TRIP B6 reverse | requested 07:01
+Wait 14 min; board 07:15; arrive 07:35; ride 20 min; total 34 min.
+  07:15 Port -> 07:20 Mall (5 min)
+  07:20 Mall -> 07:25 Public Park B (5 min)
+  07:25 Public Park B -> 07:30 Residential Zone B (5 min)
+  07:30 Residential Zone B -> 07:35 Hospital (5 min)
+
+No remaining B3 bus in this direction at the boarding stop today.
+
+BUS SNAPSHOT 06:07: 14 active services
+  B1-F-360 forward | Residential Zone A -> Airport | 7/10 min completed
+  B1-R-360 reverse | Tech Park -> Airport | 7/10 min completed
+  B2-F-360 forward | Transport Hub A -> Airport | 2/5 min completed
+  B2-R-360 reverse | Economic Zone -> Airport | 7/15 min completed
+  B3-F-360 forward | Public Park A -> Multimodal Transport Center | 2/5 min completed
+  B3-R-360 reverse | Lake -> City Area | 7/10 min completed
+  B4-F-360 forward | Transport Hub A -> City Hall | 2/5 min completed
+  B4-R-360 reverse | Transport Hub B -> Residential Zone C | 7/10 min completed
+  B5-F-360 forward | City Hall -> Multimodal Transport Center | 2/5 min completed
+  B5-R-360 reverse | City Hall -> University | 2/5 min completed
+  B6-F-360 forward | Residential Zone B -> Public Park B | 2/5 min completed
+  B6-R-360 reverse | Mall -> Public Park B | 2/5 min completed
+  B7-F-360 forward | Residential Zone B -> Transport Hub B | 7/10 min completed
+  B7-R-360 reverse | Industrial Zone B -> Mall | 7/10 min completed
+Each ID represents one scheduled trip; fleet reuse/capacity are not modelled in Part I.
+
+SMART CITY TRANSPORT - PART II: TRAIN NETWORK
+
+TRAIN NETWORK: 13 undirected train links
+3 Tech Park -> 6 Public Park A (20 min); 7 Economic Zone (10 min); 10 Multimodal Transport Center (20 min)
+4 Industrial Zone A -> 5 Transport Hub A (5 min)
+5 Transport Hub A -> 4 Industrial Zone A (5 min); 10 Multimodal Transport Center (10 min)
+6 Public Park A -> 3 Tech Park (20 min)
+7 Economic Zone -> 3 Tech Park (10 min); 11 City Area (10 min); 12 Lake (5 min)
+10 Multimodal Transport Center -> 5 Transport Hub A (10 min); 15 Public Park B (5 min); 3 Tech Park (20 min)
+11 City Area -> 7 Economic Zone (10 min)
+12 Lake -> 7 Economic Zone (5 min); 20 Port (5 min); 19 Industrial Zone B (7 min)
+15 Public Park B -> 10 Multimodal Transport Center (5 min); 17 Transport Hub B (20 min)
+17 Transport Hub B -> 15 Public Park B (20 min); 19 Industrial Zone B (20 min)
+19 Industrial Zone B -> 17 Transport Hub B (20 min); 20 Port (10 min); 12 Lake (7 min)
+20 Port -> 12 Lake (5 min); 19 Industrial Zone B (10 min)
+12 of 20 stops are served by train.
+
+TRAIN LINES (assumed; operate in both directions)
+T1 - West-South spine - 60 min
+  4 Industrial Zone A -> 5 Transport Hub A -> 10 Multimodal Transport Center -> 15 Public Park B -> 17 Transport Hub B -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 20 min.
+T2 - North-East connector - 40 min
+  6 Public Park A -> 3 Tech Park -> 7 Economic Zone -> 11 City Area
+  Depart each terminus 05:30-23:30 every 20 min.
+T3 - Tech Park express - 20 min
+  3 Tech Park -> 10 Multimodal Transport Center
+  Depart each terminus 05:30-23:30 every 20 min.
+T4 - East coast - 20 min
+  7 Economic Zone -> 12 Lake -> 20 Port -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 20 min.
+T5 - Lake-Industrial B shuttle - 7 min
+  12 Lake -> 19 Industrial Zone B
+  Depart each terminus 05:30-23:30 every 20 min.
+
+TIMETABLE T1 forward | terminus departure 07:10
+  07:10 Industrial Zone A
+  07:15 Transport Hub A
+  07:25 Multimodal Transport Center
+  07:30 Public Park B
+  07:50 Transport Hub B
+  08:10 Industrial Zone B
+
+TRAIN TRIP T1 forward | requested 07:02
+Wait 13 min; board 07:15; arrive 07:50; ride 35 min; total 48 min.
+  07:15 Transport Hub A -> 07:25 Multimodal Transport Center (10 min)
+  07:25 Multimodal Transport Center -> 07:30 Public Park B (5 min)
+  07:30 Public Park B -> 07:50 Transport Hub B (20 min)
+
+TRAIN SNAPSHOT 05:37: 8 active services
+  T1-F-330 forward | Transport Hub A -> Multimodal Transport Center | 2/10 min completed
+  T1-R-330 reverse | Industrial Zone B -> Transport Hub B | 7/20 min completed
+  T2-F-330 forward | Public Park A -> Tech Park | 7/20 min completed
+  T2-R-330 reverse | City Area -> Economic Zone | 7/10 min completed
+  T3-F-330 forward | Tech Park -> Multimodal Transport Center | 7/20 min completed
+  T3-R-330 reverse | Multimodal Transport Center -> Tech Park | 7/20 min completed
+  T4-F-330 forward | Lake -> Port | 2/5 min completed
+  T4-R-330 reverse | Industrial Zone B -> Port | 7/10 min completed
+Each ID represents one scheduled trip; fleet reuse/capacity are not modelled.
+
+PARTS III AND IV - INTEGRATED SCHEDULED JOURNEYS AND PROFILING
+BUS/TRAIN TRANSFER STOPS (mode changes permitted only here)
+5 Transport Hub A | buses: B2 B4 | trains: T1
+10 Multimodal Transport Center | buses: B3 B5 | trains: T1 T3
+17 Transport Hub B | buses: B4 B7 | trains: T1
+BFS (fewest links)
+  Riding time: 20 min (timetable waits excluded)
+  Industrial Zone A --train--> Transport Hub A --bus--> City Hall --bus--> University --bus--> Hospital
+DIJKSTRA (least riding time)
+  Riding time: 20 min (timetable waits excluded)
+  Industrial Zone A --train--> Transport Hub A --bus--> City Hall --bus--> University --bus--> Hospital
+SCHEDULED JOURNEY | arrive 07:35; total 35 min; waiting 15 min; riding 20 min
+  train T1 | Industrial Zone A -> Transport Hub A | wait 10 min; board 07:10; arrive 07:15
+  bus B4 | Transport Hub A -> Hospital | wait 5 min; board 07:20; arrive 07:35
+Hour 7 : Generated 150 passengers.
+Sample passenger 7000 | Port -> Tech Park | ready 07:22
+SCHEDULED JOURNEY | arrive 08:10; total 48 min; waiting 28 min; riding 20 min
+  train T4 | Port -> Economic Zone | wait 18 min; board 07:40; arrive 07:50
+  train T2 | Economic Zone -> Tech Park | wait 10 min; board 08:00; arrive 08:10
+SCHEDULED NETWORK STATISTICS (includes service waits)
+Total passengers: 150
+Trips found: 150
+Trips not found: 0
+Average total travel time: 31.71 min
+Average waiting time: 10.74 min
+Average riding time: 20.97 min
+Bus/train mode changes: 30
+Busiest stop: Transport Hub A (used by 61 completed journeys)
+Hour 12 : Generated 36 passengers.
+Sample passenger 12000 | Economic Zone -> Public Park A | ready 12:31
+SCHEDULED JOURNEY | arrive 13:05; total 34 min; waiting 14 min; riding 20 min
+  bus B2 | Economic Zone -> Airport | wait 14 min; board 12:45; arrive 13:00
+  bus B3 | Airport -> Public Park A | wait 0 min; board 13:00; arrive 13:05
+SCHEDULED NETWORK STATISTICS (includes service waits)
+Total passengers: 36
+Trips found: 36
+Trips not found: 0
+Average total travel time: 31.64 min
+Average waiting time: 9.69 min
+Average riding time: 21.94 min
+Bus/train mode changes: 8
+Busiest stop: Transport Hub A (used by 17 completed journeys)

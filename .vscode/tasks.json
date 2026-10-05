@@ -1,190 +1,258 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Build transport",
-      "type": "process",
-      "command": "g++",
-      "osx": {
-        "command": "clang++"
-      },
-      "args": [
-        "-std=c++17",
-        "-Wall",
-        "-Wextra",
-        "-Wpedantic",
-        "-g",
-        "src/main.cpp",
-        "src/graph.cpp",
-        "src/bus_network.cpp",
-        "src/train_network.cpp",
-        "src/simulate.cpp",
-        "src/routing.cpp",
-        "-o",
-        "transport"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
-      "label": "Run transport",
-      "type": "process",
-      "command": "${workspaceFolder}/transport",
-      "windows": {
-        "command": "${workspaceFolder}/transport.exe"
-      },
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "dependsOn": "Build transport",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      }
-    },
-    {
-      "label": "Run Part I demo",
-      "type": "process",
-      "command": "${workspaceFolder}/transport",
-      "windows": {
-        "command": "${workspaceFolder}/transport.exe"
-      },
-      "args": [
-        "--demo"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "dependsOn": "Build transport",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      }
-    },
-    {
-      "label": "Build bus tests",
-      "type": "process",
-      "command": "g++",
-      "osx": {
-        "command": "clang++"
-      },
-      "args": [
-        "-std=c++17",
-        "-Wall",
-        "-Wextra",
-        "-Wpedantic",
-        "-g",
-        "src/graph.cpp",
-        "src/bus_network.cpp",
-        "tests/bus_network_tests.cpp",
-        "-o",
-        "bus_tests"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "label": "Run bus tests",
-      "type": "process",
-      "command": "${workspaceFolder}/bus_tests",
-      "windows": {
-        "command": "${workspaceFolder}/bus_tests.exe"
-      },
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "dependsOn": "Build bus tests",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      }
-    },
-    {
-      "label": "Build train tests",
-      "type": "process",
-      "command": "g++",
-      "osx": {
-        "command": "clang++"
-      },
-      "args": [
-        "-std=c++17",
-        "-Wall",
-        "-Wextra",
-        "-Wpedantic",
-        "-g",
-        "src/graph.cpp",
-        "src/bus_network.cpp",
-        "src/train_network.cpp",
-        "tests/train_network_tests.cpp",
-        "-o",
-        "train_tests"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [
-        "$gcc"
-      ]
-    },
-    {
-      "label": "Run train tests",
-      "type": "process",
-      "command": "${workspaceFolder}/train_tests",
-      "windows": {
-        "command": "${workspaceFolder}/train_tests.exe"
-      },
-      "args": [],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "dependsOn": "Build train tests",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      }
-    },
-    {
-      "label": "Run Part II demo",
-      "type": "process",
-      "command": "${workspaceFolder}/transport",
-      "windows": {
-        "command": "${workspaceFolder}/transport.exe"
-      },
-      "args": [
-        "--train-demo"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "dependsOn": "Build transport",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      }
-    }
-  ]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build transport",
+            "type": "process",
+            "command": "g++",
+            "osx": {
+                "command": "clang++"
+            },
+            "args": [
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "src/main.cpp",
+                "src/graph.cpp",
+                "src/bus_network.cpp",
+                "src/train_network.cpp",
+                "src/simulate.cpp",
+                "src/routing.cpp",
+                "-o",
+                "transport"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run transport",
+            "type": "process",
+            "command": "${workspaceFolder}/transport",
+            "windows": {
+                "command": "${workspaceFolder}/transport.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Build transport",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Run Part I demo",
+            "type": "process",
+            "command": "${workspaceFolder}/transport",
+            "windows": {
+                "command": "${workspaceFolder}/transport.exe"
+            },
+            "args": [
+                "--demo"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Build transport",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build bus tests",
+            "type": "process",
+            "command": "g++",
+            "osx": {
+                "command": "clang++"
+            },
+            "args": [
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "src/graph.cpp",
+                "src/bus_network.cpp",
+                "tests/bus_network_tests.cpp",
+                "-o",
+                "bus_tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Run bus tests",
+            "type": "process",
+            "command": "${workspaceFolder}/bus_tests",
+            "windows": {
+                "command": "${workspaceFolder}/bus_tests.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Build bus tests",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build train tests",
+            "type": "process",
+            "command": "g++",
+            "osx": {
+                "command": "clang++"
+            },
+            "args": [
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "src/graph.cpp",
+                "src/bus_network.cpp",
+                "src/train_network.cpp",
+                "tests/train_network_tests.cpp",
+                "-o",
+                "train_tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Run train tests",
+            "type": "process",
+            "command": "${workspaceFolder}/train_tests",
+            "windows": {
+                "command": "${workspaceFolder}/train_tests.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Build train tests",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Run Part II demo",
+            "type": "process",
+            "command": "${workspaceFolder}/transport",
+            "windows": {
+                "command": "${workspaceFolder}/transport.exe"
+            },
+            "args": [
+                "--train-demo"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Build transport",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Build integration tests",
+            "type": "process",
+            "command": "g++",
+            "osx": {
+                "command": "clang++"
+            },
+            "args": [
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-Wpedantic",
+                "-g",
+                "src/graph.cpp",
+                "src/bus_network.cpp",
+                "src/train_network.cpp",
+                "src/simulate.cpp",
+                "src/routing.cpp",
+                "tests/integration_tests.cpp",
+                "-o",
+                "integration_tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Run integration tests",
+            "type": "process",
+            "command": "${workspaceFolder}/integration_tests",
+            "windows": {
+                "command": "${workspaceFolder}/integration_tests.exe"
+            },
+            "dependsOn": "Build integration tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "Run full group demo",
+            "type": "process",
+            "command": "${workspaceFolder}/transport",
+            "windows": {
+                "command": "${workspaceFolder}/transport.exe"
+            },
+            "args": [
+                "--full-demo"
+            ],
+            "dependsOn": "Build transport",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        }
+    ]
 }
