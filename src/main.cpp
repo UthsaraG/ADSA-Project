@@ -1,7 +1,9 @@
 #include "bus_network.h"
 #include "train_network.h"
+#include "routing.h"
+#include "simulate.h"
 
-#include <algorithm>
+
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -83,25 +85,6 @@ void trainDemo(const TrainNetwork& train) {
     train.printSnapshot(parseTime("05:37"), std::cout);
 }
 
-void showTransfers(const BusNetwork& bus, const TrainNetwork& train) {
-    std::cout << "BUS/TRAIN TRANSFER STOPS (mode changes permitted only here)\n";
-    for (int id : train.graph().transferStops()) {
-        std::cout << id << " " << train.graph().stop(id).name << " | buses:";
-        for (const auto& route : bus.routes()) {
-            if (std::find(route.stops.begin(), route.stops.end(), id) != route.stops.end()) {
-                std::cout << ' ' << route.id;
-            }
-        }
-        std::cout << " | trains:";
-        for (const auto& line : train.lines()) {
-            if (std::find(line.stops.begin(), line.stops.end(), id) != line.stops.end()) {
-                std::cout << ' ' << line.id;
-            }
-        }
-        std::cout << '\n';
-    }
-}
-
 void help() {
     std::cout << "Usage: transport [command]\n"
                  "  (no command)                         Interactive menu\n"
@@ -112,7 +95,6 @@ void help() {
                  "  --snapshot HH:MM                      Moving buses at one time\n"
                  "  --simulate START END STEP_MINUTES    Advance simulation clock\n"
                  "  --export-city PATH                    Export compiled reference city as JSON\n"
-                 "  --transfers                          Permitted bus/train transfer locations\n"
                  "  --city                               Combined bus/train graph counts\n"
                  "  --train-network | --train-lines      Inspect train links and lines\n"
                  "  --train-timetable LINE F|R HH:MM      One scheduled train departure\n"
@@ -128,7 +110,7 @@ void interactive(const BusNetwork& network, const TrainNetwork& train) {
                  "Use stop IDs 1-20 and route IDs B1-B7 and train IDs T1-T5; times use HH:MM.\n";
     while (true) {
         std::cout << "\n1. City stops\n2. Bus graph\n3. Bus service lines\n4. Timetable\n"
-                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n15. Bus/train transfer stops\n0. Exit\nChoice: ";
+                     "5. Direct bus trip\n6. Bus snapshot\n7. Demonstration\n8. Advance simulation clock\n9. Train network\n10. Train lines\n11. Train timetable\n12. Direct train trip\n13. Train snapshot\n14. Train demonstration\n15. Run Network Profiling\n0. Exit\nChoice: ";
         std::string choice;
         if (!std::getline(std::cin, choice) || choice == "0") return;
         try {
@@ -168,7 +150,12 @@ void interactive(const BusNetwork& network, const TrainNetwork& train) {
                 train.printTrip(train.planTrip(line, from, to, requested), std::cout);
             } else if (choice == "13") train.printSnapshot(parseTime(ask("Snapshot HH:MM: ")), std::cout);
             else if (choice == "14") trainDemo(train);
-            else if (choice == "15") showTransfers(network, train);
+                        else if (choice == "15") {
+                const int hour = integer(ask("Enter hour of day (0-23) to profile: "));
+                std::vector<Passenger> passengers = generatePassengers(hour);
+                profileNetwork(train.graph(), passengers);
+            }
+
             else std::cout << "Choose 0 to 15.\n";
         } catch (const std::exception& error) {
             if (std::cin.eof()) return;
@@ -200,9 +187,7 @@ int main(int argc, char* argv[]) {
             std::cout << "CITY: " << city.stops().size() << " stops, "
                       << city.edgeCount(TransportMode::Bus) << " bus links, "
                       << city.edgeCount(TransportMode::Train) << " train links\n";
-            showTransfers(network, train);
-        } else if (command == "--transfers" && argc == 2) showTransfers(network, train);
-        else if (command == "--train-network" && argc == 2) train.printNetwork(std::cout);
+        } else if (command == "--train-network" && argc == 2) train.printNetwork(std::cout);
         else if (command == "--train-lines" && argc == 2) train.printLines(std::cout);
         else if (command == "--train-demo" && argc == 2) trainDemo(train);
         else if (command == "--train-timetable" && argc == 5) {
