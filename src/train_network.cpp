@@ -8,10 +8,10 @@
 #include <utility>
 
 namespace {
-// Assumed train service (agree with the group): 05:30-23:30, every 10 minutes.
+// Assumed train service (agree with the group): 05:30-23:30, every 20 minutes.
 constexpr int firstTrain = 5 * 60 + 30;
 constexpr int lastTrain = 23 * 60 + 30;
-constexpr int headway = 10;
+constexpr int headway = 20;
 
 std::string clockText(int minute) {
     std::ostringstream out;

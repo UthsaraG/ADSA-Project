@@ -178,19 +178,19 @@ snapshots and a Part II demonstration. Existing bus commands retain their behavi
 
 ```sh
 ./transport --city
+./transport --transfers
 ./transport --train-network
 ./transport --train-lines
-./transport --train-timetable T1 F 07:00
+./transport --train-timetable T1 F 07:10
 ./transport --train-trip T1 5 17 07:02
 ./transport --train-snapshot 05:37
 ./transport --train-demo
 ```
 
 The combined graph has 20 stops, 23 bus links and 13 train links. The T1 trip
-above boards at 07:05 and arrives at 07:40: 3 minutes waiting and 35 riding.
-T1-T5 are proposed lines with departures from both termini every 10 minutes
-from 05:30 through 23:30 inclusive, with zero dwell time. These assumptions
-remain subject to group agreement. The final train can arrive after midnight;
+above boards at 07:15 and arrives at 07:50: 13 minutes waiting and 35 riding.
+T1-T5 are proposed lines with departures from both termini every 20 minutes
+from 05:30 through 23:30 inclusive, with zero dwell time. The 20-minute interval is the agreed service frequency. The final train can arrive after midnight;
 requests and snapshots are restricted to the current day.
 
 | Line | Forward stop IDs (reverse also operates) | One-way minutes |
@@ -212,12 +212,14 @@ On Windows use `.\train_tests.exe` and `.\transport.exe`; on macOS `clang++`
 may be used instead of `g++`. See [Part II report](report/part2.md) and its
 [demonstration output](report/part2-demo.txt).
 
-### Decisions for Members 3 and 4
+### Agreed settings for Members 3 and 4
 
-1. Confirm the T1-T5 line grouping and the 05:30-23:30, 10-minute service.
-2. Confirm whether mode changes are restricted to marked transfer stops 5, 10,
-   and 17, or allowed at all stops served by both modes. The current direct-trip
-   commands do not implement mode changes.
+1. T1-T5 depart both termini every 20 minutes from 05:30 through 23:30.
+   Departures include 05:30, 05:50 and 06:10; 07:10 is valid and 07:00 is not.
+2. Mode changes are restricted to Transport Hub A (5), Multimodal Transport
+   Center (10), and Transport Hub B (17). Other stops shared by both modes do
+   not permit bus/train transfers. The current direct-trip commands stay on
+   one line; Members 3 and 4 can use the shared transfer checks when joining trips.
 3. Industrial Zone A (4) is train-only; journeys to or from it require a train.
 
 After these changes are merged into `main`, Members 3 and 4 should update their
@@ -230,5 +232,7 @@ git merge origin/main
 
 Member 3 can use `planTrip` and `vehiclesAt` on either network. Member 4 should
 use the combined `train.graph()` for multimodal routing and respect the agreed
-transfer policy. Include `train_network.h` alongside `bus_network.h` when using
+transfer policy using `Graph::canTransfer(id, fromMode, toMode)`.
+`Graph::transferStops()` returns the designated stops that have both bus and
+train edges, and `--transfers` (menu option 15) lists their serving lines. Include `train_network.h` alongside `bus_network.h` when using
 these APIs.

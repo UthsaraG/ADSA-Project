@@ -22,7 +22,7 @@ int main() {
     const TrainNetwork train = TrainNetwork::referenceCity(bus.graph());
     std::cout << "SMART CITY TRANSPORT - PART II: TRAIN ROUTES AND TRAIN NETWORK\n"
                  "C++17 | 20 city locations | red dashed links from the reference map\n"
-                 "Assumed service: 05:30-23:30, every 10 min, both directions, zero dwell time.\n\n";
+                 "Assumed service: 05:30-23:30, every 20 min, both directions, zero dwell time.\n\n";
     train.printNetwork(std::cout);
     std::size_t multi = 0;
     for (const auto& component : train.graph().connectedComponents(TransportMode::Train)) {
@@ -32,11 +32,11 @@ int main() {
     std::cout << "Train-only stop: Industrial Zone A (4) has no bus link; it is reached only by train.\n\n";
     train.printLines(std::cout);
     std::cout << '\n';
-    showTimetable(train, "T1", false, parseTime("07:00"));
+    showTimetable(train, "T1", false, parseTime("07:10"));
     std::cout << '\n';
     train.printTrip(train.planTrip("T1", 5, 17, parseTime("07:02")), std::cout);
     std::cout << '\n';
-    train.printTrip(train.planTrip("T1", 5, 17, parseTime("07:06")), std::cout);
+    train.printTrip(train.planTrip("T1", 5, 17, parseTime("07:16")), std::cout);
     std::cout << '\n';
     train.printTrip(train.planTrip("T4", 19, 7, parseTime("07:01")), std::cout);
     std::cout << '\n';

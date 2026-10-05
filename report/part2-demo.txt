@@ -1,6 +1,6 @@
 SMART CITY TRANSPORT - PART II: TRAIN ROUTES AND TRAIN NETWORK
 C++17 | 20 city locations | red dashed links from the reference map
-Assumed service: 05:30-23:30, every 10 min, both directions, zero dwell time.
+Assumed service: 05:30-23:30, every 20 min, both directions, zero dwell time.
 
 TRAIN NETWORK: 13 undirected train links
 3 Tech Park -> 6 Public Park A (20 min); 7 Economic Zone (10 min); 10 Multimodal Transport Center (20 min)
@@ -22,39 +22,39 @@ Train-only stop: Industrial Zone A (4) has no bus link; it is reached only by tr
 TRAIN LINES (assumed; operate in both directions)
 T1 - West-South spine - 60 min
   4 Industrial Zone A -> 5 Transport Hub A -> 10 Multimodal Transport Center -> 15 Public Park B -> 17 Transport Hub B -> 19 Industrial Zone B
-  Depart each terminus 05:30-23:30 every 10 min.
+  Depart each terminus 05:30-23:30 every 20 min.
 T2 - North-East connector - 40 min
   6 Public Park A -> 3 Tech Park -> 7 Economic Zone -> 11 City Area
-  Depart each terminus 05:30-23:30 every 10 min.
+  Depart each terminus 05:30-23:30 every 20 min.
 T3 - Tech Park express - 20 min
   3 Tech Park -> 10 Multimodal Transport Center
-  Depart each terminus 05:30-23:30 every 10 min.
+  Depart each terminus 05:30-23:30 every 20 min.
 T4 - East coast - 20 min
   7 Economic Zone -> 12 Lake -> 20 Port -> 19 Industrial Zone B
-  Depart each terminus 05:30-23:30 every 10 min.
+  Depart each terminus 05:30-23:30 every 20 min.
 T5 - Lake-Industrial B shuttle - 7 min
   12 Lake -> 19 Industrial Zone B
-  Depart each terminus 05:30-23:30 every 10 min.
+  Depart each terminus 05:30-23:30 every 20 min.
 
-TIMETABLE T1 forward | terminus departure 07:00
-  07:00 Industrial Zone A
-  07:05 Transport Hub A
-  07:15 Multimodal Transport Center
-  07:20 Public Park B
-  07:40 Transport Hub B
-  08:00 Industrial Zone B
+TIMETABLE T1 forward | terminus departure 07:10
+  07:10 Industrial Zone A
+  07:15 Transport Hub A
+  07:25 Multimodal Transport Center
+  07:30 Public Park B
+  07:50 Transport Hub B
+  08:10 Industrial Zone B
 
 TRAIN TRIP T1 forward | requested 07:02
-Wait 3 min; board 07:05; arrive 07:40; ride 35 min; total 38 min.
-  07:05 Transport Hub A -> 07:15 Multimodal Transport Center (10 min)
-  07:15 Multimodal Transport Center -> 07:20 Public Park B (5 min)
-  07:20 Public Park B -> 07:40 Transport Hub B (20 min)
-
-TRAIN TRIP T1 forward | requested 07:06
-Wait 9 min; board 07:15; arrive 07:50; ride 35 min; total 44 min.
+Wait 13 min; board 07:15; arrive 07:50; ride 35 min; total 48 min.
   07:15 Transport Hub A -> 07:25 Multimodal Transport Center (10 min)
   07:25 Multimodal Transport Center -> 07:30 Public Park B (5 min)
   07:30 Public Park B -> 07:50 Transport Hub B (20 min)
+
+TRAIN TRIP T1 forward | requested 07:16
+Wait 19 min; board 07:35; arrive 08:10; ride 35 min; total 54 min.
+  07:35 Transport Hub A -> 07:45 Multimodal Transport Center (10 min)
+  07:45 Multimodal Transport Center -> 07:50 Public Park B (5 min)
+  07:50 Public Park B -> 08:10 Transport Hub B (20 min)
 
 TRAIN TRIP T4 reverse | requested 07:01
 Wait 9 min; board 07:10; arrive 07:30; ride 20 min; total 29 min.
