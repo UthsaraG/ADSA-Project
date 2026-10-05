@@ -78,7 +78,7 @@ void trainDemo(const TrainNetwork& train) {
     std::cout << '\n';
     train.printLines(std::cout);
     std::cout << '\n';
-    showTimetable(train, "T1", false, parseTime("07:00"));
+    showTimetable(train, "T1", false, parseTime("07:10"));
     std::cout << '\n';
     train.printTrip(train.planTrip("T1", 5, 17, parseTime("07:02")), std::cout);
     std::cout << '\n';

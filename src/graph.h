@@ -35,6 +35,9 @@ public:
     const std::vector<Edge>& neighbors(int id) const;
     int travelMinutes(int from, int to, TransportMode mode) const;
     std::size_t edgeCount(TransportMode mode) const;
+    // A mode change requires a marked stop with both services.
+    bool canTransfer(int id, TransportMode from, TransportMode to) const;
+    std::vector<int> transferStops() const;
     std::vector<std::vector<int>> connectedComponents(TransportMode mode) const;
 
 private:

@@ -37,8 +37,8 @@ this grouping is a design assumption:
 | T5 Lake-Industrial B shuttle | 12 - 19 | 7 |
 
 Each line operates in both directions, with terminus departures from 05:30
-through 23:30 inclusive every 10 minutes. Trains are faster and more frequent
-than buses (06:00-22:00 every 15 minutes). Stops have zero dwell time, and a
+through 23:30 inclusive every 20 minutes, as agreed by the group.
+Bus service runs 06:00-22:00 every 15 minutes. Stops have zero dwell time, and a
 final train may reach downstream stops after 23:30. These service times are
 assumptions. The model does not simulate fleet reuse, passenger loads,
 congestion or demand.
@@ -99,9 +99,9 @@ g++ -std=c++17 src/graph.cpp src/bus_network.cpp src/train_network.cpp tests/tra
 
 | Case | Expected behavior |
 | --- | --- |
-| T1 forward from Industrial Zone A at 07:00 | Industrial Zone B arrival 08:00 |
-| T1 Transport Hub A to Transport Hub B, ready 07:02 | Board 07:05, wait 3 min, ride 35 min, arrive 07:40 |
-| Same passenger ready 07:06 | Board 07:15, arrive 07:50 |
+| T1 forward from Industrial Zone A at 07:10 | Industrial Zone B arrival 08:10 |
+| T1 Transport Hub A to Transport Hub B, ready 07:02 | Board 07:15, wait 13 min, ride 35 min, arrive 07:50 |
+| Same passenger ready 07:16 | Board 07:35, arrive 08:10 |
 | Reverse T4 Industrial Zone B to Economic Zone, ready 07:01 | Board 07:10, arrive 07:30 |
 | T5 Lake to Industrial B, ready 23:30 | Board last train 23:30, arrive 23:37 |
 | T5 Lake to Industrial B, ready 23:45 | No remaining departure today |
@@ -117,19 +117,22 @@ under Address Sanitizer and UndefinedBehaviorSanitizer. These checks establish
 the Part II behavior under the stated assumptions; the integrated system still
 has to be tested by the group.
 
-## Integration and open decisions
+## Integration and agreed settings
 
 `TrainNetwork::referenceCity` takes a graph that already has the 20 stops, so
 the group leader integrates it with one call and does not modify the shared
 graph. Member 3 can call `planTrip` and `vehiclesAt` as for buses, and Member 4
 can read train edges with `neighbors(id)` filtered by `TransportMode::Train`.
 
-Points the group still has to agree on:
+Agreed settings for the integrated system:
 
-1. The T1-T5 grouping and the 05:30-23:30, 10-minute train service times.
-2. Where a passenger may change between bus and train. The diagram marks only
-   stops 5, 10 and 17 as transfer locations, but stops 3, 6, 7, 11, 12, 15, 19
-   and 20 are served by both modes.
+1. T1-T5 operate from 05:30 through 23:30 every 20 minutes.
+2. Bus/train transfers are permitted only at Transport Hub A (5), Multimodal
+   Transport Center (10), and Transport Hub B (17). Stops 3, 6, 7, 11, 12, 15,
+   19 and 20 share services but do not permit a mode change.
+   `Graph::canTransfer` checks the marker and the presence of both modes;
+   `Graph::transferStops` lists operational transfer points. The `--transfers`
+   command and menu option 15 show their serving bus and train lines.
 3. Journeys that start or end at Industrial Zone A (4) must use a train.
 
 This document is a Part II contribution for the group's maximum 10-page report,

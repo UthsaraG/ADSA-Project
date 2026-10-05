@@ -54,6 +54,27 @@ std::size_t Graph::edgeCount(TransportMode mode) const {
     return count / 2; // Each undirected edge is stored at both endpoints.
 }
 
+bool Graph::canTransfer(int id, TransportMode from, TransportMode to) const {
+    if (!stop(id).transferStop || from == to) return false;
+    bool servesFrom = false;
+    bool servesTo = false;
+    for (const auto& edge : neighbors(id)) {
+        if (edge.mode == from) servesFrom = true;
+        if (edge.mode == to) servesTo = true;
+    }
+    return servesFrom && servesTo;
+}
+
+std::vector<int> Graph::transferStops() const {
+    std::vector<int> result;
+    for (const auto& entry : stops_) {
+        if (canTransfer(entry.first, TransportMode::Bus, TransportMode::Train)) {
+            result.push_back(entry.first);
+        }
+    }
+    return result;
+}
+
 std::vector<std::vector<int>> Graph::connectedComponents(TransportMode mode) const {
     std::set<int> visited;
     std::vector<std::vector<int>> result;
